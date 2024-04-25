@@ -14,7 +14,8 @@ jobs:
 
       - name: Build docker image
         run: |
-          docker compose -f ./php_gke/php/compose.yaml up --build -d
+          docker compose -f ./php_gke/php/backend/Dockerfile.backend up --build -d
+          docker compose -f ./php_gke/php/frontend/Dockerfile.yaml up --build -d
           echo Build completed
 
       - name: "Tag and Push docker image in dev branch"
