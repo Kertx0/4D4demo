@@ -19,9 +19,8 @@ jobs:
 
       - name: "Tag and Push docker image in prod branch"
         run: |
-          echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-          docker tag php-backend us-east1-docker.pkg.dev/h24-4d4-17/prod/php-backend:$GITHUB_ENV
-          docker tag php-frontend us-east1-docker.pkg.dev/h24-4d4-17/prod/php-frontend:$GITHUB_ENV
-          docker push us-east1-docker.pkg.dev/h24-4d4-17/prod/php-backend:$GITHUB_ENV
-          docker push us-east1-docker.pkg.dev/h24-4d4-17/prod/php-frontend:$GITHUB_ENV
+          docker tag php-backend us-east1-docker.pkg.dev/h24-4d4-17/prod/php-backend:${{ github.sha }}
+          docker tag php-frontend us-east1-docker.pkg.dev/h24-4d4-17/prod/php-frontend:${{ github.sha }}
+          docker push us-east1-docker.pkg.dev/h24-4d4-17/prod/php-backend:${{ github.sha }}
+          docker push us-east1-docker.pkg.dev/h24-4d4-17/prod/php-frontend:${{ github.sha }}
           echo Push completed
