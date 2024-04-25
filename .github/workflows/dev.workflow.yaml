@@ -14,7 +14,7 @@ jobs:
 
       - name: Build docker image
         run: |
-          docker compose -f ../../php_gke/php/compose.yaml up --build -d
+          docker compose -f ./php_gke/php/compose.yaml up --build -d
           echo Build completed
   images:
     needs: build
