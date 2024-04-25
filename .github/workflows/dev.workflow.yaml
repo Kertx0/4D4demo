@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [ "dev" ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build docker image
+        run: |
+          docker compose -f ./php_gke/php/compose.yaml up --build -d
+          echo Build completed
+
+      - name: "Tag and Push docker image in dev branch"
+        run: |
+          docker tag php-backend us-east1-docker.pkg.dev/h24-4d4-17/dev/php-backend:${{ github.sha }}
+          docker tag php-frontend us-east1-docker.pkg.dev/h24-4d4-17/dev/php-backend:${{ github.sha }}
+          docker push us-east1-docker.pkg.dev/h24-4d4-17/dev/php-backend:${{ github.sha }}
+          docker push us-east1-docker.pkg.dev/h24-4d4-17/dev/php-frontend:${{ github.sha }}
+          echo Push completed
