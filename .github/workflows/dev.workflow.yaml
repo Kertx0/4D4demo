@@ -1,7 +1,7 @@
 name: CI
 
 on:
-  commit:
+  push:
     branches: [ "dev" ]
 
   workflow_dispatch:
@@ -9,7 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -18,9 +17,10 @@ jobs:
           docker compose up --build -d
           echo Build completed
   images:
+    needs: build
+    runs-on: ubuntu-latest
     steps:
-      -needs: build
-      -name: Tag and Push docker image
+      -name: "Tag and Push docker image in dev branch"
         run: |
           docker tag php-backend:${{ github.ref_name }} us-east1-docker.pkg.dev/h24-4d4-17/dev/php-backend:${{ github.ref_name }}
           docker tag php-frontend:${{ github.ref_name }} us-east1-docker.pkg.dev/h24-4d4-17/dev/php-backend:${{ github.ref_name }}

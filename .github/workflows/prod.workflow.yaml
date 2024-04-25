@@ -1,7 +1,7 @@
 name: CI
 
 on:
-  commit:
+  push:
     branches: [ "main" ]
 
   workflow_dispatch:
@@ -16,14 +16,16 @@ jobs:
         run: |
           docker compose up --build -d
           echo Build completed
+
   images:
+    needs: build
+    runs-on: ubuntu-latest
     steps:
-      -needs: build
-      -name: Tag and Push docker image
+      - name: "Tag and Push docker image in prod branch"
         run: |
           echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
           docker tag php-backend:$GITHUB_ENV us-east1-docker.pkg.dev/h24-4d4-17/prod/php-backend:$GITHUB_ENV
-          docker tag php-frontend:$GITHUB_ENV us-east1-docker.pkg.dev/h24-4d4-17/prod/php-backend:$GITHUB_ENV
+          docker tag php-frontend:$GITHUB_ENV us-east1-docker.pkg.dev/h24-4d4-17/prod/php-frontend:$GITHUB_ENV
           docker push us-east1-docker.pkg.dev/h24-4d4-17/prod/php-backend:$GITHUB_ENV
           docker push us-east1-docker.pkg.dev/h24-4d4-17/prod/php-frontend:$GITHUB_ENV
           echo Push completed
