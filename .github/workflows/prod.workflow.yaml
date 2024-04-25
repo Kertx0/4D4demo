@@ -14,13 +14,9 @@ jobs:
 
       - name: Build docker image
         run: |
-          docker compose up --build -d
+          docker compose -f ./php_gke/php/compose.yaml up --build -d
           echo Build completed
 
-  images:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
       - name: "Tag and Push docker image in prod branch"
         run: |
           echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
