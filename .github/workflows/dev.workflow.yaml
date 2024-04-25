@@ -14,14 +14,11 @@ jobs:
 
       - name: Build docker image
         run: |
-          docker compose -f ./php_gke/php/backend/Dockerfile.backend up --build -d
-          docker compose -f ./php_gke/php/frontend/Dockerfile.yaml up --build -d
+          docker compose -f ./php_gke/php/compose.yaml up --build -d -t image:${{ github.ref_name }}
           echo Build completed
 
       - name: "Tag and Push docker image in dev branch"
         run: |
-          docker tag php-backend:${{ github.ref_name }} us-east1-docker.pkg.dev/h24-4d4-17/dev/php-backend:${{ github.ref_name }}
-          docker tag php-frontend:${{ github.ref_name }} us-east1-docker.pkg.dev/h24-4d4-17/dev/php-backend:${{ github.ref_name }}
-          docker push us-east1-docker.pkg.dev/h24-4d4-17/dev/php-backend:${{ github.ref_name }}
-          docker push us-east1-docker.pkg.dev/h24-4d4-17/dev/php-frontend:${{ github.ref_name }}
+          docker tag image:${{ github.ref_name }} us-east1-docker.pkg.dev/h24-4d4-17/dev/image:${{ github.ref_name }}
+          docker push us-east1-docker.pkg.dev/h24-4d4-17/dev/image:${{ github.ref_name }}
           echo Push completed
